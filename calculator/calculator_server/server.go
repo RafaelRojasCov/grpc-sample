@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"../calculatorpb"
 	"google.golang.org/grpc"
@@ -23,6 +24,30 @@ func (*server) Calculator(ctx context.Context, req *calculatorpb.CalculatorReque
 	}
 
 	return res, nil
+}
+
+func (*server) PrimeNumberDecomposition(req *calculatorpb.CalculateManyTimesRequest, stream calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
+	fmt.Printf("PrimeNumberDecomposition was invoked with %v\n", req)
+	numberOne := req.GetCalculator().GetNumberOne()
+
+	divisor := int32(2)
+	number := numberOne
+
+	for number > 1 {
+		if number%divisor == 0 {
+			res := &calculatorpb.CalculateManyTimesResponse{
+				Result: divisor,
+			}
+			stream.Send(res)
+			time.Sleep(1000 * time.Millisecond)
+			number = number / divisor
+
+		} else {
+			divisor = divisor + 1
+		}
+	}
+	return nil
+
 }
 
 func main() {
