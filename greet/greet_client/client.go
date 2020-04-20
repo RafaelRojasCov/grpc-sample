@@ -66,7 +66,7 @@ func doServerStreaming(c greetpb.GreetServiceClient) {
 		}
 
 		if err != nil {
-			log.Fatalf("error while reading stream: %w", err)
+			log.Fatalf("error while reading stream: %v", err)
 		}
 
 		log.Printf("Response from GreetManyTimes: %v", msg.GetResult())
